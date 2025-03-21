@@ -22,7 +22,7 @@
 .datetime {
   margin: 0 1rem;
   min-height: 10vh;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .header {
@@ -39,6 +39,7 @@ section h1 {
   color: #fff;
   font-size: 4.8rem;
   text-align: center;
+  margin: 0;
 }
 
 .date-time {
@@ -123,14 +124,14 @@ span {
 
 .todo-item {
   margin: 1.5rem auto;
-  font-size: 20px;
+  font-size: 26px;
   color: #1c2833;
-  border-radius: 22px;
+  border-radius: 40px;
   transition: background-color 0.3s ease-in-out, transform 0.2s;
   background-color: #f8f9fa;
-  min-width: 35rem;
+  min-width: 30rem;
   max-width: 42rem;
-  padding: 0.4rem 2.5rem;
+  padding: 0.4rem 1.5rem;
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
@@ -149,7 +150,7 @@ li span {
   font-weight: 500;
   color: #34495e;
   word-wrap: break-word;
-  font-size: 1.1rem;
+  font-size: 2.1rem;
 }
 
 

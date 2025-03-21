@@ -1,78 +1,3 @@
-// import { useState } from "react"
-// import "./todo.css"
-
-// import { MdCheck, MdDeleteForever } from "react-icons/md";
-
-
-// export const Todo = () => {
-//     const [inputvalue, setInputvalue] = useState();
-//     const [task, setTask] = useState([]);
-
-//     const handleInputChange = (value) => {
-//         setInputvalue(value);
-//     }
-
-//     const handleFormSubmit = (event) => {
-//         event.preventDefault();
-
-//         if (!inputvalue) return;
-
-//         if (task.includes(inputvalue)) {
-//             setInputvalue("")
-//             return;
-//         }
-//         setTask((prevTask) => [...prevTask, inputvalue]);
-
-//         setInputvalue("")
-//     }
-
-//     return (
-//         <section className='todo-container'>
-//             <header>
-//                 <h1>Todo List</h1>
-//             </header>
-
-//             <section className='form'>
-//                 <form onSubmit={handleFormSubmit}>
-//                     <div>
-//                         <input
-//                             type="text"
-//                             className='todo-input'
-//                             autoComplete='off'
-//                             value={inputvalue}
-//                             onChange={(event) => handleInputChange(event.target.value)}
-//                         />
-//                     </div>
-
-//                     <div>
-//                         <button type="submit" className="todo-btn">Add Task</button>
-//                     </div>
-
-//                 </form>
-//             </section>
-
-//             <section>
-//                 <ul>
-//                     {
-//                         task.map((curTask, index) => {
-//                             return <li key={index} className="todo-item">
-//                                 <span>{curTask}</span>
-//                                 <button className="check-btn">
-//                                     <MdCheck />
-//                                 </button>
-//                                 <button className="delete-btn">
-//                                     <MdDeleteForever />
-//                                 </button>
-//                             </li>
-//                         })}
-//                 </ul>
-//             </section>
-
-//         </section>
-//     )
-// }
-
-
 import { useState } from "react";
 import { MdCheck, MdDeleteForever } from "react-icons/md";
 
@@ -80,6 +5,7 @@ export const Todo = () => {
 
     const [inputvalue, SetInputvalue] = useState();
     const [task, setTask] = useState([]);
+    const [dateTime, setDateTime] = useState("");
 
     const handleInputChange = (value) => {
         SetInputvalue(value);
@@ -97,13 +23,30 @@ export const Todo = () => {
 
         setTask((prevTask) => [...prevTask, inputvalue]);
         SetInputvalue("");
-
     }
+
+    const deleteTask = (indextodelete) =>{
+        setTask(task.filter((_,index)=> index != indextodelete))
+    };
+
+    const clearall = () =>{
+        setTask ([])
+    }
+
+    setInterval(() => {
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString();
+        const formattedTime = now.toLocaleTimeString();
+
+
+        setDateTime (`${formattedDate} - ${formattedTime}`);
+    }, 1000);
 
     return (
         <section className="todo-container">
             <header>
                 <h1>Todo App</h1>
+                <h2 className="date-time"> {dateTime} </h2>
             </header>
 
             <section className='form'>
@@ -128,7 +71,7 @@ export const Todo = () => {
                                 <button className="check-btn">
                                     <MdCheck />
                                 </button>
-                                <button className="delete-btn">
+                                <button className="delete-btn" onClick={() => deleteTask(index)}>
                                     <MdDeleteForever />
                                 </button>
                             </li>
@@ -136,9 +79,10 @@ export const Todo = () => {
                 </ul>
             </section>
 
+            <button className="clear-btn" onClick={clearall}>Clear All</button>
+
         </section>
     )
-
 }
 
 export default Todo
