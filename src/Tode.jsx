@@ -6,6 +6,27 @@ export const Todo = () => {
   const [tasks, setTasks] = useState([]);
   const [dateTime, setDateTime] = useState("");
 
+  // Load tasks from local storage on mount
+  useEffect(() => {
+    try {
+      const storedTasks = localStorage.getItem("tasks");
+      if (storedTasks) {
+        console.log("Loaded tasks from local storage:", storedTasks);
+        setTasks(JSON.parse(storedTasks)); // Set tasks from storage
+      }
+    } catch (error) {
+      console.error("Error loading tasks from local storage:", error);
+    }
+  }, []);
+
+  // Save tasks to local storage whenever tasks change
+  useEffect(() => {
+    if (tasks.length > 0) {
+      console.log("Saving tasks to local storage:", tasks);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+  }, [tasks]);
+
   // Handle input change
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -15,7 +36,7 @@ export const Todo = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault();
     if (!inputValue.trim()) return;
-  
+
     // Check if task already exists (case-insensitive)
     const taskExists = tasks.some((task) => task.content.toLowerCase() === inputValue.toLowerCase());
     if (taskExists) {
@@ -23,38 +44,36 @@ export const Todo = () => {
       setInputValue("");
       return;
     }
-  
+
     const newTask = {
       id: Date.now(),
       content: inputValue,
       checked: false, // Task starts as unchecked
     };
-  
-    setTasks((prevTasks) => [...prevTasks, newTask]); // Add new task
+
+    setTasks([...tasks, newTask]); // Add new task
     setInputValue(""); // Clear input field  
   };
 
   // Toggle task completion (Check button)
   const toggleTaskCompletion = (id) => {
-    console.log("Toggling task:", id); // Debugging log
-
-    setTasks((prevTasks) => {
-      const updatedTasks = prevTasks.map((task) =>
-        task.id === id ? { ...task, checked: !task.checked } : task
-      );
-      console.log("Updated Tasks:", updatedTasks); // Debugging
-      return updatedTasks;
-    });
+    setTasks(tasks.map((task) =>
+      task.id === id ? { ...task, checked: !task.checked } : task
+    ));
   };
 
   // Delete a task
   const deleteTask = (id) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks)); // Save to storage
   };
 
   // Clear all tasks
   const clearAll = () => {
     setTasks([]);
+    localStorage.removeItem("tasks"); // Clear from local storage
+    setInputValue("");
   };
 
   // Update date-time every second
@@ -97,6 +116,7 @@ export const Todo = () => {
                 {task.content}
               </span>
 
+              
               <button
                 className="check-btn"
                 style={{ backgroundColor: task.checked ? "green" : "transparent", color: task.checked ? "white" : "black" }}
@@ -108,7 +128,6 @@ export const Todo = () => {
                 <MdDeleteForever />
               </button>
             </li>
-
           ))}
         </ul>
       </section>
